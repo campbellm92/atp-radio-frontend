@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+
+:root {
+  --color-zinc-100: oklch(96.7% 0.001 286.375);
+  --color-zinc-700: oklch(37% 0.013 285.805);
+  --color-yellow-main: oklch(0.7331 0.157494 71.417);
+  --color-yellow-light: oklch(0.78 0.157494 71.417);
+  --color-cream: oklch(0.9814 0.0342 99.83);
+}
+
+body {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--color-zinc-100);
+  color: var(--color-zinc-700);
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.radio-body {
+  border: 1.5rem solid var(--color-yellow-main);
+  border-radius: 2.5rem;
+  min-width: 80%;
+  height: 50%;
+}
+
+.basket-pattern {
+  background: linear-gradient(
+      45deg,
+      oklch(44.6% 0.03 256.802) 12%,
+      transparent 0,
+      transparent 88%,
+      oklch(44.6% 0.03 256.802) 0
+    ),
+    linear-gradient(
+      135deg,
+      transparent 37%,
+      oklch(87.2% 0.01 258.338) 0,
+      oklch(87.2% 0.01 258.338) 63%,
+      transparent 0
+    ),
+    linear-gradient(
+      45deg,
+      transparent 37%,
+      oklch(44.6% 0.03 256.802) 0,
+      oklch(44.6% 0.03 256.802) 63%,
+      transparent 0
+    ),
+    #eee;
+  background-size: 25px 25px;
+}
+
+.radio-inside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logo {
+  align-self: center;
+  text-align: center;
+  width: 20%;
+  height: auto;
+  background-color: var(--color-yellow-main);
+  border-bottom: 0.5rem solid var(--color-yellow-main);
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+.logo-text-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-text {
+  font-size: clamp(1rem, 2vw + 0.5rem, 2.5rem);
+  font-family: "Lobster";
+  font-weight: 700;
+  padding: 1rem 0;
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 20%;
+  border-top: 1rem solid var(--color-yellow-main);
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+  background-color: var(--color-yellow-light);
+}
+
+.panel button {
+  border: none;
+  background-color: var(--color-cream);
+  margin: 2rem;
+  border-radius: 10%;
+}
+
+.icon-button {
+  color: var(--color-zinc-700);
+  width: 3rem;
+}
