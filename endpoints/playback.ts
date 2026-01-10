@@ -1,4 +1,4 @@
-// fetch the Spotify API endpoint that handles playback
+// hit the Spotify API endpoint that handles playback
 export async function initialisePlayback(
   token: string,
   deviceId: string,
