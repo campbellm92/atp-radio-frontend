@@ -1,62 +1,36 @@
+let sdkReady = false;
 let player: any;
 let deviceId: string | undefined;
-let token: string | null = null;
 
-let onReady: ((deviceId: string) => void) | null = null;
-let onStateChange: ((state: any) => void) | null = null;
-
-// inject Spotify SDK player script:
-if (
-  // ... if not already there:
-  !document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')
-) {
-  const script = document.createElement("script");
-  script.src = "https://sdk.scdn.co/spotify-player.js";
-  script.async = true;
-  document.body.appendChild(script);
-}
+window.onSpotifyWebPlaybackSDKReady = () => {
+  console.log("Spotify SDK loaded");
+  sdkReady = true;
+};
 
 // initialise the SDK player:
-window.onSpotifyWebPlaybackSDKReady = () => {
-  if (!token || !onReady || !onStateChange) {
-    console.warn("Spotify SDK ready before init");
-    return;
+export function initialiseSpotifySDK(token: string): Promise<string> {
+  if (!sdkReady) {
+    throw new Error("Spotify SDK not ready yet");
+  }
+
+  if (player && deviceId) {
+    return Promise.resolve(deviceId);
   }
 
   player = new Spotify.Player({
     name: "ATP Radio Player",
-    getOAuthToken: (cb: (token: string) => void) => cb(token!),
+    getOAuthToken: (cb) => cb(token),
     volume: 0.5,
   });
 
-  player.addListener("ready", ({ device_id }: { device_id: string }) => {
-    deviceId = device_id;
-    onReady!(device_id);
+  return new Promise((resolve) => {
+    player.addListener("ready", ({ device_id }) => {
+      deviceId = device_id;
+      resolve(device_id);
+    });
+
+    player.connect();
   });
-
-  player.addListener("player_state_changed", onStateChange);
-
-  player.connect().then((success: any) => {
-    if (!success) {
-      console.error("Failed to connect Spotify player");
-    }
-  });
-};
-
-// mid-level orchestrator:
-export function initialiseSpotifySDK(
-  accessToken: string,
-  readyCb: (deviceId: string) => void,
-  stateChangeCb: (state: any) => void
-) {
-  token = accessToken;
-  onReady = readyCb;
-  onStateChange = stateChangeCb;
-
-  // handle SDK already loaded
-  if ((window as any).Spotify) {
-    window.onSpotifyWebPlaybackSDKReady?.();
-  }
 }
 
 // helper functions:
