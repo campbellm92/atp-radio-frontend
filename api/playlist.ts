@@ -1,4 +1,4 @@
-import { BASE_URL } from "./baseURL";
+import { BACKEND_BASE_URL } from "../config/urls";
 import { handleAuthFailure } from "./authFailure";
 
 export type PlaylistResponse = {
@@ -8,7 +8,7 @@ export type PlaylistResponse = {
 };
 
 export async function fetchPlaylist(): Promise<PlaylistResponse> {
-  const response = await fetch(`${BASE_URL}/play`, {
+  const response = await fetch(`${BACKEND_BASE_URL}/play`, {
     credentials: "include",
   });
 
