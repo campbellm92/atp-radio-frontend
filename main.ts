@@ -1,47 +1,19 @@
+import "./spotify/spotifySDK";
 import "./style.css";
-import { fetchAccessToken } from "./api/auth";
-import { fetchPlaylist } from "./api/playlist";
-import { initialiseSpotifySDK } from "./spotify/spotifySDK";
-import {
-  initialiseRadioController,
-  bindPlaybackControls,
-  handleStateChange,
-} from "./spotify/radioController";
 
-(async () => {
-  const accessToken = await fetchAccessToken();
+import { initialiseRadio } from "./spotify/radioController";
 
-  if (!accessToken) {
-    console.error("No Spotify access token found");
-    return;
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  initialiseRadio();
+});
 
-  const playlist = await fetchPlaylist();
-  if (!playlist) {
-    console.error("Playlist could not be found");
-    return;
-  }
+/*
+The steps:
 
-  await startApp(accessToken, playlist);
-
-  console.log("Starting playback with URIs:", playlist);
-})();
-
-async function startApp(token: string, playlist: string[]) {
-  initialiseRadioController(token, playlist);
-  bindPlaybackControls();
-
-  await initialiseSpotifySDK(
-    token,
-    async (deviceId) => {
-      console.log("Spotify device ready:", deviceId);
-
-      const playToggleBtn = document.querySelector(
-        ".play-toggle-button"
-      ) as HTMLButtonElement | null;
-
-      if (playToggleBtn) playToggleBtn.disabled = false;
-    },
-    handleStateChange
-  );
-}
+1) load the token when the person visits the app, that way playback is a matter of a) fetch a playlist, b) play the playlist
+2) onclick -> 
+    a) fetch the playlist information (backend endpoint) so it's loaded
+    b) meanwhile: do the auth and set the token
+    c) fetch the spotify playback endpoint and plug in the already loaded playlist information
+    d) play the playlist
+*/
