@@ -1,9 +1,13 @@
 import { BASE_URL } from "./baseURL";
 import { handleAuthFailure } from "./authFailure";
 
-export type Playlist = string[];
+export type PlaylistResponse = {
+  tracks: {
+    track_uri: string;
+  }[];
+};
 
-export async function fetchPlaylist(): Promise<Playlist> {
+export async function fetchPlaylist(): Promise<PlaylistResponse> {
   const response = await fetch(`${BASE_URL}/play`, {
     credentials: "include",
   });
@@ -13,5 +17,5 @@ export async function fetchPlaylist(): Promise<Playlist> {
   }
 
   const data = await response.json();
-  return data as Playlist;
+  return data as PlaylistResponse;
 }
