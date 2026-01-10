@@ -1,58 +1,46 @@
-import { pause, resume, getDeviceId } from "../spotify/spotifySDK";
-import { playBtnIcon, pauseBtnIcon } from "../ui/buttonIcons";
-import { initialisePlayback } from "../spotify/playback";
-
-let token: string | null = null;
-let playlist: string[] = [];
+import { pause, resume, initialiseSpotifySDK } from "../spotify/spotifySDK";
+import { pauseBtnIcon } from "../ui/buttonIcons";
+import { fetchAccessToken } from "../api/auth";
+import { initialisePlayback } from "../endpoints/playback";
+import { fetchPlaylist } from "../api/playlist";
 
 let hasStartedPlayback = false;
 let isPlaying = false;
 
-const playToggleBtn = document.querySelector(
-  ".play-toggle-button"
-) as HTMLButtonElement | null;
+export function initialiseRadio() {
+  const playToggleButton = document.querySelector(
+    ".play-toggle-button"
+  ) as HTMLButtonElement;
 
-export function initialiseRadioController(accessToken: string, uris: string[]) {
-  token = accessToken;
-  playlist = uris;
-}
+  console.log("playToggleButton:", playToggleButton);
 
-export function bindPlaybackControls() {
-  if (!playToggleBtn) return;
+  if (!playToggleButton) {
+    console.error("Play toggle button not found in DOM");
+    return;
+  }
 
-  playToggleBtn?.addEventListener("click", async () => {
-    const deviceId = getDeviceId();
-    if (!deviceId || !token) return;
+  playToggleButton.addEventListener("click", async () => {
+    console.log("Button clicked");
+    const token = await fetchAccessToken();
+    if (!token) return;
+    console.log("Token after pressing btn:", token);
+
+    const deviceId = await initialiseSpotifySDK(token);
+    console.log("Device ID found during radio init:", deviceId);
 
     if (!hasStartedPlayback) {
-      await initialisePlayback(token, deviceId, playlist);
-      hasStartedPlayback = true;
-      isPlaying = true;
-      playToggleBtn.innerHTML = pauseBtnIcon;
-      playToggleBtn.setAttribute("aria-label", "Pause");
-      document.body.classList.add("playing");
-
-      return;
+      const playlist = await fetchPlaylist();
+      const uris = playlist.tracks.map((track) => track.track_uri);
+      console.log("URIs sent to Spotify:", uris);
+      console.log("Playlist data:", playlist);
+      await initialisePlayback(token, deviceId, uris);
     }
     if (isPlaying) {
+      playToggleButton.innerHTML = pauseBtnIcon;
       await pause();
     } else {
       await resume();
     }
-    console.log("Play clicked", {
-      hasStartedPlayback,
-      isPlaying,
-      deviceId: getDeviceId(),
-    });
+    isPlaying = !isPlaying;
   });
-}
-
-export function handleStateChange(state: any) {
-  if (!state || !playToggleBtn) return;
-
-  isPlaying = !state.paused;
-
-  playToggleBtn!.innerHTML = isPlaying ? pauseBtnIcon : playBtnIcon;
-  playToggleBtn!.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
-  document.body.classList.toggle("playing", isPlaying);
 }
