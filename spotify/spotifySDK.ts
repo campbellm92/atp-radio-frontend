@@ -34,6 +34,10 @@ export function initialiseSpotifySDK(token: string): Promise<string> {
 }
 
 // helper functions:
+export function getDeviceId() {
+  return deviceId;
+}
+
 export function togglePlay() {
   if (!player) throw new Error("Player not initialised");
   return player.togglePlay();
@@ -49,6 +53,12 @@ export function resume() {
   return player.resume();
 }
 
-export function getDeviceId() {
-  return deviceId;
+export function previous() {
+  if (!player) throw new Error("Player not initialised");
+  return player.previousTrack();
+}
+
+export function next() {
+  if (!player) throw new Error("Player not initialised");
+  return player.nextTrack();
 }
