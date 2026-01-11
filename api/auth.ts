@@ -1,15 +1,16 @@
-import { BASE_URL } from "./baseURL";
-import { handleAuthFailure } from "./authFailure";
+import { BACKEND_BASE_URL } from "../config/urls";
 
-export async function fetchAccessToken(): Promise<string> {
-  const response = await fetch(`${BASE_URL}/auth/token`, {
-    credentials: "include",
-  });
+export async function fetchAccessToken(): Promise<string | null> {
+  try {
+    const response = await fetch(`${BACKEND_BASE_URL}/auth/token`, {
+      credentials: "include",
+    });
 
-  if (!response.ok) {
-    handleAuthFailure(response);
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    return data.access_token;
+  } catch {
+    return null;
   }
-
-  const data = await response.json();
-  return data.access_token;
 }
