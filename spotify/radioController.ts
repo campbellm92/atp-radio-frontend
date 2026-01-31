@@ -5,7 +5,7 @@ import {
   initialiseSpotifySDK,
   onPlayerStateChange,
 } from "../spotify/spotifySDK";
-import { fetchAccessToken } from "../api/auth";
+import { fetchSpotifyToken } from "../api/auth";
 import { fetchPlaylist } from "../api/playlist";
 import {
   initialisePlayback,
@@ -49,7 +49,7 @@ function updateTrackInfo(state: any) {
 }
 
 async function handlePlayClick(playToggleButton: HTMLButtonElement) {
-  const token = await fetchAccessToken();
+  const token = await fetchSpotifyToken();
 
   if (!token) {
     localStorage.setItem("pendingPlayback", "true");
@@ -76,6 +76,7 @@ async function handlePlayClick(playToggleButton: HTMLButtonElement) {
     if (isPlaying) {
       await pause();
       playToggleButton.innerHTML = playBtnIcon;
+      panel?.classList.add("with-playback");
     } else {
       playToggleButton.innerHTML = pauseBtnIcon;
       await resume();
@@ -102,15 +103,15 @@ async function handleNextClick() {
 
 export function initialiseRadio() {
   const playToggleButton = document.getElementById(
-    "play-toggle-button"
+    "play-toggle-button",
   ) as HTMLButtonElement;
 
   const previousButton = document.getElementById(
-    "previous-button"
+    "previous-button",
   ) as HTMLButtonElement;
 
   const nextButton = document.getElementById(
-    "next-button"
+    "next-button",
   ) as HTMLButtonElement;
 
   if (!playToggleButton) {
@@ -123,7 +124,7 @@ export function initialiseRadio() {
   });
 
   playToggleButton.addEventListener("click", () =>
-    handlePlayClick(playToggleButton)
+    handlePlayClick(playToggleButton),
   );
 
   nextButton.addEventListener("click", () => handleNextClick());
