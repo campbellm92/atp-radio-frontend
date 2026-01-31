@@ -1,8 +1,8 @@
 import { BACKEND_BASE_URL } from "../config/urls";
 
-export async function fetchAccessToken(): Promise<string | null> {
+export async function fetchSpotifyToken(): Promise<string | null> {
   try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auth/token`, {
+    const response = await fetch(`${BACKEND_BASE_URL}/auth/spotify-token`, {
       credentials: "include",
     });
 
