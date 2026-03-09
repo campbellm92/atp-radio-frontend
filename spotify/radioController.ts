@@ -49,7 +49,7 @@ function updateTrackInfo(state: any) {
 }
 
 async function handlePlayClick(playToggleButton: HTMLButtonElement) {
-  const token = await fetchSpotifyToken();
+  let token = await fetchSpotifyToken();
 
   if (!token) {
     localStorage.setItem("pendingPlayback", "true");
@@ -60,29 +60,43 @@ async function handlePlayClick(playToggleButton: HTMLButtonElement) {
   currentToken = token;
   console.log("Token after pressing btn:", token);
 
-  const deviceId = await initialiseSpotifySDK(token);
-  console.log("Device ID found during radio init:", deviceId);
+  let deviceId: string;
 
+  try {
+    deviceId = await initialiseSpotifySDK(token);
+  } catch (err) {
+    console.error("SDK failed, refreshing token");
+
+    token = await fetchSpotifyToken(); // refresh
+    if (!token) return;
+
+    currentToken = token;
+
+    deviceId = await initialiseSpotifySDK(token);
+  }
   const panel = document.querySelector(".panel");
 
   if (!hasStartedPlayback) {
     playToggleButton.innerHTML = pauseBtnIcon;
+
     const playlist = await fetchPlaylist();
     const uris = playlist.tracks.map((track) => track.track_uri);
+
     await initialisePlayback(token, deviceId, uris);
+
+    panel?.classList.add("with-playback");
+
     hasStartedPlayback = true;
     isPlaying = true;
+  } else if (isPlaying) {
+    await pause();
+    playToggleButton.innerHTML = playBtnIcon;
+    isPlaying = false;
   } else {
-    if (isPlaying) {
-      await pause();
-      playToggleButton.innerHTML = playBtnIcon;
-      panel?.classList.add("with-playback");
-    } else {
-      playToggleButton.innerHTML = pauseBtnIcon;
-      await resume();
-    }
+    await resume();
+    playToggleButton.innerHTML = pauseBtnIcon;
+    isPlaying = true;
   }
-  isPlaying = !isPlaying;
 }
 
 async function handlePreviousClick() {
