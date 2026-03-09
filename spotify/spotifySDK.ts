@@ -1,3 +1,5 @@
+import { fetchSpotifyToken } from "../api/auth";
+
 let sdkReady = false;
 let player: any;
 let deviceId: string | undefined;
@@ -10,7 +12,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 };
 
 // initialise the SDK player:
-export function initialiseSpotifySDK(token: string): Promise<string> {
+export function initialiseSpotifySDK(): Promise<string> {
   if (!sdkReady) {
     throw new Error("Spotify SDK not ready yet");
   }
@@ -26,7 +28,10 @@ export function initialiseSpotifySDK(token: string): Promise<string> {
 
   player = new Spotify.Player({
     name: "ATP Radio Player",
-    getOAuthToken: (cb) => cb(token),
+    getOAuthToken: async (cb) => {
+      const freshToken = await fetchSpotifyToken(); // always fetch fresh
+      if (freshToken) cb(freshToken);
+    },
     volume: 0.5,
   });
 

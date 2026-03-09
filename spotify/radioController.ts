@@ -22,23 +22,25 @@ const pauseBtnIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 6
 const playBtnIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" class="icon-button"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M73 39C59.2 29.3 40.6 29.8 27.4 40.1S0 66.9 0 83.9L0 428.1c0 17 9.4 32.6 24.6 40.6s33.4 7.1 47.2-2.7l288-216c12.1-9.1 19.2-23.3 19.2-38.3s-7.1-29.2-19.2-38.3L73 39z"/></svg>`;
 
 function updateTrackInfo(state: any) {
-  const trackInfoWrapper = document.getElementById("track-info");
+  const placeholder = document.getElementById("track-info-placeholder");
+  const nowPlaying = document.getElementById("track-info-nowplaying");
+
+  if (!placeholder || !nowPlaying) return;
+
   if (!state || !state.track_window?.current_track) {
-    if (trackInfoWrapper) {
-      trackInfoWrapper.style.display = "none";
-    }
+    placeholder.style.display = "flex";
+    nowPlaying.style.display = "none";
     return;
   }
+
+  placeholder.style.display = "none";
+  nowPlaying.style.display = "flex";
 
   const track = state.track_window.current_track;
 
   const trackName = document.getElementById("track-name");
   const artistName = document.getElementById("artist-name");
   const albumArt = document.getElementById("album-art") as HTMLImageElement;
-
-  if (trackInfoWrapper) {
-    trackInfoWrapper.style.display = "flex";
-  }
 
   if (trackName) trackName.textContent = track.name;
   if (artistName)
@@ -49,7 +51,7 @@ function updateTrackInfo(state: any) {
 }
 
 async function handlePlayClick(playToggleButton: HTMLButtonElement) {
-  let token = await fetchSpotifyToken();
+  const token = await fetchSpotifyToken();
 
   if (!token) {
     localStorage.setItem("pendingPlayback", "true");
@@ -58,22 +60,9 @@ async function handlePlayClick(playToggleButton: HTMLButtonElement) {
   }
 
   currentToken = token;
-  console.log("Token after pressing btn:", token);
 
-  let deviceId: string;
+  const deviceId = await initialiseSpotifySDK();
 
-  try {
-    deviceId = await initialiseSpotifySDK(token);
-  } catch (err) {
-    console.error("SDK failed, refreshing token");
-
-    token = await fetchSpotifyToken(); // refresh
-    if (!token) return;
-
-    currentToken = token;
-
-    deviceId = await initialiseSpotifySDK(token);
-  }
   const panel = document.querySelector(".panel");
 
   if (!hasStartedPlayback) {
