@@ -42,10 +42,17 @@
               </button>
             </div>
             <div id="track-info" class="track-info">
-              <img id="album-art" src="./assets/test.png" alt="Album art">
-              <p id="artist-name">No artist playing</p>
-              <p>-</p>
-              <p id="track-name">No track playing</p>
+              <div id="track-info-placeholder" class="track-placeholder hidden">
+                <p>Press the play button to discover new music.</p>
+                <p class="small-text">Spotify premium required</p>
+              </div>
+              <div id="track-info-nowplaying" class="track-nowplaying hidden">
+                <img id="album-art" src="./assets/test.png" alt="Album art">
+                <p id="artist-name"></p>
+                <p>-</p>
+                <p id="track-name"></p>
+              </div>
+
             </div>
           </div>
         </div>
