@@ -72,6 +72,11 @@ export function onPlayerStateChange(callback: (state: any) => void) {
 }
 
 // helper functions:
+export async function getCurrentState(): Promise<any | null> {
+  if (!player) throw new Error("Player not initialised");
+  return player.getCurrentState();
+}
+
 export function getDeviceId() {
   return deviceId;
 }
