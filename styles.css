@@ -63,8 +63,8 @@ a {
   font-size: 0.75rem;
 }
 
-/* radio body */
-
+/* * * * * * * * * * * * * * RADIO BODY PRE-PANEL * * * * * * * * * * * * * */
+/* container, logo, background "basket" pattern */
 .radio-body {
   border: 1.5rem solid var(--color-yellow-main);
   border-radius: 2.5rem;
@@ -138,8 +138,10 @@ a {
   font-weight: 700;
   padding: 1rem;
 }
+/* * * * * * * * * * * * * * /RADIO BODY PRE-PANEL * * * * * * * * * * * * * */
 
-/* playback panel */
+/* * * * * * * * * * * * * * PLAYBACK PANEL * * * * * * * * * * * * * */
+/* panel container, buttons, track information */
 .panel {
   display: flex;
   flex-direction: column;
@@ -156,118 +158,59 @@ a {
   background-color: var(--color-yellow-light);
 }
 
+.panel-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
 .panel button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: clamp(0.8rem, 2.5vw, 1.2rem);
   padding: 0.75em;
   border: solid 0.15rem var(--color-zinc-700);
   background-color: var(--color-cream);
   border-radius: 0.75em;
-  /* margin: rem 0 0 0; */
 }
 
 .panel button:hover {
   cursor: pointer;
 }
 
-.icon-button {
-  color: var(--color-zinc-700);
+.panel button svg {
   width: 1.4em;
   height: 1.4em;
-  display: block;
+  color: var(--color-zinc-700);
 }
 
-/* panel play button loader */
-.loader {
-  display: none;
-  width: 40px;
-  height: 20px;
-  --c: no-repeat
-    radial-gradient(farthest-side, var(--color-zinc-700) 93%, #0000);
-  background:
-    var(--c) 0 0,
-    var(--c) 50% 0;
-  background-size: 8px 8px;
+.play-button {
   position: relative;
-  clip-path: inset(-200% -100% 0 0);
-  animation: l6-0 1.5s linear infinite;
 }
-.loader:before {
+
+.play-button::after {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 12px;
-  background: var(--color-zinc-700);
-  left: -16px;
-  top: 0;
-  animation:
-    l6-1 1.5s linear infinite,
-    l6-2 0.5s cubic-bezier(0, 200, 0.8, 200) infinite;
-}
-.loader:after {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto auto;
-  width: 8px;
-  height: 8px;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 3px solid var(--color-zinc-700);
+  border-top-color: transparent;
   border-radius: 50%;
-  background: #000;
-  animation: l6-3 1.5s linear infinite;
+  animation: spin 1.4s linear infinite;
+  opacity: 0;
 }
-@keyframes l6-0 {
-  0%,
-  30% {
-    background-position:
-      0 0,
-      50% 0;
-  }
-  33% {
-    background-position:
-      0 100%,
-      50% 0;
-  }
-  41%,
-  63% {
-    background-position:
-      0 0,
-      50% 0;
-  }
-  66% {
-    background-position:
-      0 0,
-      50% 100%;
-  }
-  74%,
-  100% {
-    background-position:
-      0 0,
-      50% 0;
-  }
+
+.play-button.loading .icon {
+  opacity: 0;
 }
-@keyframes l6-1 {
-  90% {
-    transform: translateY(0);
-  }
-  95% {
-    transform: translateY(15px);
-  }
-  100% {
-    transform: translateY(15px);
-    left: calc(100% - 8px);
-  }
+
+.play-button.loading::after {
+  opacity: 1;
 }
-@keyframes l6-2 {
-  100% {
-    top: -0.1px;
-  }
-}
-@keyframes l6-3 {
-  0%,
-  80%,
-  100% {
-    transform: translate(0);
-  }
-  90% {
-    transform: translate(26px);
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -284,6 +227,7 @@ a {
   position: relative;
   gap: 1rem;
   margin: 0.25rem 0;
+  padding: clamp(0.3rem, 1vh, 0.75rem);
 }
 
 .track-placeholder,
@@ -307,7 +251,7 @@ a {
   gap: 1rem;
   position: relative;
   width: 100%;
-  height: 100%;
+
   text-transform: uppercase;
 }
 
@@ -329,14 +273,15 @@ a {
     transform: translate(0, -50%);
   }
   to {
-    transform: translate(-200%, -50%);
+    transform: translate(-300%, -50%);
   }
 }
 
 .track-nowplaying img {
   flex: 0 0 auto;
-  width: clamp(1.25rem, 4vw, 2.5rem);
-  height: clamp(1.25rem, 4vw, 2.5rem);
+  width: clamp(1.8rem, 4vw, 2.5rem);
+  height: clamp(1.8rem, 4vw, 2.5rem);
+  object-fit: cover;
   border-radius: 0.15rem;
 }
 
@@ -348,8 +293,9 @@ a {
   font-weight: 600;
   text-transform: uppercase;
 }
+/* * * * * * * * * * * * * * /PLAYBACK PANEL * * * * * * * * * * * * * */
 
-/* information tooltip */
+/* * * * * * * * * * * * * * INFORMATION TOOLTIP * * * * * * * * * * * * * */
 .tooltip {
   position: fixed;
   top: 1rem;
@@ -385,9 +331,9 @@ a {
   width: 2rem;
   height: 2rem;
 }
+/* * * * * * * * * * * * * * /INFORMATION TOOLTIP * * * * * * * * * * * * * */
 
-/* footer */
-
+/* * * * * * * * * * * * * * FOOTER * * * * * * * * * * * * * */
 footer {
   display: flex;
   justify-content: space-between;
@@ -407,9 +353,9 @@ footer svg {
   height: 2rem;
   fill: currentColor;
 }
+/* * * * * * * * * * * * * * /FOOTER * * * * * * * * * * * * * */
 
-/* mobile */
-
+/* * * * * * * * * * * * * * MOBILE STYLES * * * * * * * * * * * * * */
 @media (max-width: 768px) and (min-height: 500px) {
   .radio-body {
     width: 100%;
@@ -440,3 +386,4 @@ footer svg {
     border-radius: 1.5rem;
   }
 }
+/* * * * * * * * * * * * * * /MOBILE STYLES * * * * * * * * * * * * * */
