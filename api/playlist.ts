@@ -1,5 +1,7 @@
-import { BACKEND_BASE_URL } from "../config/urls";
 import { handleAuthFailure } from "./authFailure";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
 
 export type PlaylistResponse = {
   tracks: {
@@ -8,7 +10,7 @@ export type PlaylistResponse = {
 };
 
 export async function fetchPlaylist(): Promise<PlaylistResponse> {
-  const response = await fetch(`${BACKEND_BASE_URL}/play`, {
+  const response = await fetch(`${API_BASE_URL}/play`, {
     credentials: "include",
   });
 

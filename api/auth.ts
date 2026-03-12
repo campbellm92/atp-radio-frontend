@@ -1,8 +1,9 @@
-import { BACKEND_BASE_URL } from "../config/urls";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
 
 export async function fetchSpotifyToken(): Promise<string | null> {
   try {
-    const response = await fetch(`${BACKEND_BASE_URL}/auth/spotify-token`, {
+    const response = await fetch(`${API_BASE_URL}/auth/spotify-token`, {
       credentials: "include",
     });
 
