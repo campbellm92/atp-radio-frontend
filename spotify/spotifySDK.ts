@@ -29,41 +29,49 @@ export function initialiseSpotifySDK(): Promise<string> {
   player = new Spotify.Player({
     name: "ATP Radio Player",
     getOAuthToken: async (cb) => {
-      const freshToken = await fetchSpotifyToken(); // always fetch fresh
+      const freshToken = await fetchSpotifyToken();
       if (freshToken) cb(freshToken);
     },
     volume: 0.5,
   });
 
   initPromise = new Promise((resolve, reject) => {
-    player.addListener("ready", ({ device_id }) => {
+    player.addListener("ready", ({ device_id }: { device_id: string }) => {
       deviceId = device_id;
       resolve(device_id);
     });
 
-    player.addListener("not_ready", ({ device_id }) => {
+    player.addListener("not_ready", ({ device_id }: { device_id: string }) => {
       console.error("Spotify SDK not ready, device_id:", device_id);
     });
 
-    player.addListener("initialization_error", ({ message }) => {
-      console.error("Spotify SDK initialization error:", message);
-      initPromise = null;
-      reject(new Error(message));
-    });
+    player.addListener(
+      "initialization_error",
+      ({ message }: { message: string }) => {
+        console.error("Spotify SDK initialization error:", message);
+        initPromise = null;
+        reject(new Error(message));
+      },
+    );
 
-    player.addListener("authentication_error", ({ message }) => {
-      console.error("Spotify SDK authentication error:", message);
-      initPromise = null;
-      reject(new Error(message));
-    });
+    player.addListener(
+      "authentication_error",
+      ({ message }: { message: string }) => {
+        console.error("Spotify SDK authentication error:", message);
+        initPromise = null;
+        reject(new Error(message));
+      },
+    );
 
-    player.addListener("player_state_changed", (state) => {
+    player.addListener("player_state_changed", (state: any | null) => {
       if (state && stateChangeCallback) {
         stateChangeCallback(state);
       }
     });
+
     player.connect();
   });
+
   return initPromise;
 }
 
