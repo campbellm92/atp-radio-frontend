@@ -1,11 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
-
 :root {
   --color-zinc-100: oklch(96.7% 0.001 286.375);
   --color-zinc-700: oklch(37% 0.013 285.805);
   --color-yellow-main: oklch(0.7331 0.157494 71.417);
   --color-yellow-light: oklch(0.78 0.157494 71.417);
   --color-cream: oklch(0.9814 0.0342 99.83);
+}
+
+@font-face {
+  font-family: "Lobster";
+  src: url("./assets/fonts/Lobster-Regular.woff2");
 }
 
 *,
@@ -373,6 +376,16 @@ footer svg {
   .panel {
     padding: 1rem;
     gap: 1rem;
+  }
+
+  footer {
+    padding: 0 1rem;
+    font-size: 0.75rem;
+  }
+
+  footer svg {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 
